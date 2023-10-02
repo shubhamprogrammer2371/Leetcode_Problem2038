@@ -1,0 +1,86 @@
+bool winnerOfGame(char * colors){
+    if(strlen(colors) < 3)
+        return 0;
+    int countA = 0 , countB = 0 , counter = 1; 
+    for( int i = 0 ; i < strlen(colors) ; i++)
+    {
+        if(colors[i] == colors[i+1])
+            counter++;
+        else
+        {
+            if((colors[i] == 'A') && (counter >= 3))
+                countA += (counter > 3) ? (counter - 2) : 1;
+            else if((colors[i] == 'B') && (counter >= 3))
+                countB += (counter > 3) ? (counter - 2) : 1;
+            counter = 1;
+        }
+    }
+    return (countA > countB);
+}
+
+
+
+-------------------------------------------------------------------------------------------------
+
+
+
+
+bool winnerOfGame(char *colors) {
+    int totalA = 0;  // Initialize a variable to store the total points of player A.
+    int totalB = 0;  // Initialize a variable to store the total points of player B.
+    int currA = 0;   // Initialize a variable to count the current consecutive colors of A.
+    int currB = 0;   // Initialize a variable to count the current consecutive colors of B.
+
+    // Iterate through the characters in the 'colors' string.
+    for (int i = 0; colors[i] != '\0'; i++) {
+        if (colors[i] == 'A') {  // If the current character is 'A':
+            currA++;              // Increment the count of consecutive 'A' colors.
+            if (currB > 2)        // If there were more than 2 consecutive 'B' colors before this 'A':
+                totalB += currB - 2;  // Add the excess consecutive 'B' colors to totalB.
+            currB = 0;            // Reset the consecutive 'B' count since there's an 'A'.
+        } else {                   // If the current character is 'B':
+            currB++;              // Increment the count of consecutive 'B' colors.
+            if (currA > 2)        // If there were more than 2 consecutive 'A' colors before this 'B':
+                totalA += currA - 2;  // Add the excess consecutive 'A' colors to totalA.
+            currA = 0;            // Reset the consecutive 'A' count since there's a 'B'.
+        }
+    }
+
+    // After the loop, add any remaining consecutive 'A' and 'B' colors to their respective totals.
+    if (currA > 2)
+        totalA += currA - 2;
+    if (currB > 2)
+        totalB += currB - 2;
+
+    // Compare the total points for 'A' and 'B' to determine the winner.
+    return totalA > totalB;  // If 'A' has more points, return true (A wins); otherwise, return false (B wins or it's a tie).
+}
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+bool winnerOfGame(char * colors){
+    int* ansCnt = (int*)calloc(2, sizeof(int));
+    int cnt = 1;
+    char curr = colors[0];
+    for(int i = 1 ; i < strlen(colors) ; i++)
+    {
+        if(curr == colors[i])
+            cnt++;
+        else{
+            if(cnt >= 3) 
+                ansCnt[curr - 'A'] += cnt - 2; 
+            curr = colors[i];
+            cnt = 1;
+        }
+    }
+    if(cnt >= 3)
+        ansCnt[curr - 'A'] += (cnt - 2);
+    
+    /* alice lose return false; */
+    return (ansCnt[0] <= ansCnt[1]) ? 0 : 1;
+}
